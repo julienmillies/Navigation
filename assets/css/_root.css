@@ -4,21 +4,14 @@ body, html {
     overflow:hidden;
     font-family: 'Open Sans', sans-serif;
     background:black;
+    height:100%;
 }
 
-#test{
-    background:red;
-    width:100px;
-    height:100px;
-    text-align:center;
-    position: absolute;
-}
-
-#rouletteElems{    
+#wheel{    
     width:800px;
     height:800px;
-/*    width:50%;
-    height:50%;*/
+    /*    width:50%;
+        height:50%;*/
     position:absolute;
     z-index:10;
     top:100%;
@@ -33,19 +26,32 @@ body, html {
     background:#101010;
     position:absolute;
     border:1px solid #222222;
+    color:white;
 }
 
-#visuels{
+#content{
     width:100%;
     height:100%;
-    position:absolute;
+    background:red;
 }
 
 .visuel{
     width:100%;
     height:100%;
-    background:black;
-    float:left;
     color:white;
     text-align:center;
+}
+
+#visuel-1{
+    background: url(http://images.buzzillions.com/images_products/09/01/k2-zed-2-0-bike_1032646_100.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment:fixed;
+}
+
+#visuel-2{
+    background: url(http://images.buzzillions.com/images_products/07/02/iron-horse-maverick-elite-mountain-bike-performance-exclusive_13526_100.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment:fixed;
 }

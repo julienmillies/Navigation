@@ -3,11 +3,19 @@ $(window).ready(function() {
     //-------------------------------------------- //
     //----------------- MAIN SITE ---------------- //
     //-------------------------------------------- //
-    var 
-    cible       = $("#roulette"),
-    body        = $('body'),
-    maxRotation = 360;
 
+    var content = document.getElementById('content'),
+            wheel = document.getElementById('wheel'),
+            maxScroll = content.scrollHeight - content.offsetHeight,
+            needsRotationUpdate = false,
+            sections = 15,
+            maxRotation = 360 - (360 / sections);
+//        maxRotation         = 360;
+
+    // Functions
+    Math.degrees = function(radians) {
+        return radians * 180 / Math.PI;
+    };
 
     function blockCanvas() {
         document.body.addEventListener('touchmove', function(event) {
@@ -22,63 +30,105 @@ $(window).ready(function() {
             window.onresize();
         });
     }
-    
-    function square(v) {
-        var carre = v * v;
-        return carre;
+
+    function createWheel() {
+        var square = $('.sq');
+        var squares = $('.sq').length;
+        var rotation = 360 / squares;
+        var dx = square.width() / 2;
+        var dy = square.height() / 2;
+        var startX = square.parent().width() / 2;
+        var startY = square.parent().height() / 2;
+
+        square.css({
+            'left': startX - dx,
+            'top': -dy
+        });
+
+        for (var i = 0; i < squares; i++) {
+            var yy = (startY - dy) - (startY - dy) * Math.cos((2 * -Math.PI * i) / squares);
+            var xx = (startX - dx) - (startX - dx) * Math.sin((2 * -Math.PI * i) / squares);
+            $('.sq:eq(' + i + ')').css({
+                'top': yy,
+                'left': xx,
+                transform: 'rotate(' + i * rotation + 'deg)'
+            });
+        }
     }
-    
-    blockCanvas();
-    Draggable.create("#rouletteElems", {
-        type            :"rotation", 
-        throwProps      :true,
-        bounds          :{
-            minRotation :0, 
-            maxRotation :270
-        },
-        edgeResistance  :0.4
-        ,
-        onDrag:function(e) {
-//            $("#rouletteElems").rotation;
+
+    function onRotateWheel() {
+        dragContent.scrollProxy.top(maxScroll * dragWheel.rotation / -maxRotation);
+        needsRotationUpdate = false;
+    }
+
+    function updateRotation() {
+        TweenMax.set(wheel, {rotation: maxRotation * (content.scrollTop / maxScroll)});
+        needsRotationUpdate = false;
+    }
+
+    function killTweens() {
+        TweenLite.killTweensOf([wheel, dragContent.scrollProxy]);
+    }
+
+    function displayContent() {
+        setTimeout(function() {
+//            $('.visuel').css({'background': 'black'});
+        }, 1000);
+    }
+
+    content.addEventListener("mousewheel", killTweens);
+    content.addEventListener("DOMMouseScroll", killTweens);
+
+    content.addEventListener("scroll", function() {
+        needsRotationUpdate = true;
+    });
+
+    TweenLite.ticker.addEventListener("tick", function() {
+        if (needsRotationUpdate) {
+            updateRotation();
         }
     });
-    
-    
-    
-    function coucou(){
-        alert('skgjk')
-    }
-    
-    function roulette (){
-        var square      = $('.sq');
-        var squares     = $('.sq').length;
-        var rotation    = maxRotation / squares;
-        var dx          = square.width()/2;
-        var dy          = square.height()/2;
-        var startX      = square.parent().width()/2;
-        var startY      = square.parent().height()/2;
-        
-        square.css({
-            'left':startX-dx, 
-            'top':-dy
-            });
-        
-        for(var i =0; i<squares; i++){
-            var yy = (startY-dy) - (startY-dy) * Math.cos((2*-Math.PI*i) / squares);
-            var xx = (startX-dx) - (startX-dx) * Math.sin((2*-Math.PI*i) / squares);
-            $('.sq:eq('+i+')').css({
-                'top' : yy,
-                'left': xx,
-                transform: 'rotate(' + i*rotation + 'deg)'
-            });
+
+    Draggable.create(wheel, {
+        type: "rotation",
+        throwProps: true,
+        edgeResistance: 0.5,
+//        force3D:false,
+        bounds: {
+            minRotation: 0,
+            maxRotation: maxRotation
+        },
+        onDragStart: killTweens,
+        onDrag: onRotateWheel,
+        onThrowUpdate: onRotateWheel,
+        snap: function(endValue) {
+            var step = maxRotation / (sections - 1);
+            return Math.round(endValue / step) * step;
+        },
+        onThrowComplete: function() {
+            displayContent();
         }
-    }
-    
-    roulette();
-    
-    // Functions
-    Math.degrees = function(radians) {
-        return radians * 180 / Math.PI;
-    };
+    });
+
+    Draggable.create(content, {
+        type: "scrollTop",
+        edgeResistance: 0.5,
+        throwProps: true,
+//        force3D:false,
+        onDragStart: killTweens,
+        snap: function(endValue) {
+            var step = maxScroll / (sections - 1);
+            return Math.round(endValue / step) * -step;
+        },
+        onThrowComplete: function() {
+            displayContent();
+        }
+    });
+
+
+    var dragContent = Draggable.get(content);
+    var dragWheel = Draggable.get(wheel);
+    createWheel();
+    blockCanvas();
 
 });
