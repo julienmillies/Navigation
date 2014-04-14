@@ -76,9 +76,24 @@ $(window).ready(function() {
         }, 1000);
     }
 
-    content.addEventListener("mousewheel", killTweens);
-    content.addEventListener("DOMMouseScroll", killTweens);
+    content.addEventListener("mousewheel", function(evt){
+        killTweens();
+         var delta = (evt.originalEvent && evt.originalEvent.detail < 0) || evt.wheelDelta > 0 ? 1 : -1;
 
+        if (delta < 0) {
+            // scroll down
+            TweenLite.to(content, 1, {scrollTo:{y:1116}, ease:Power2.easeOut});
+            console.log("scroll down");
+
+        } else {
+            // scroll up
+            console.log("scroll up");
+        }
+    });
+    content.addEventListener("DOMMouseScroll", function(){
+        killTweens();
+    });
+    
     content.addEventListener("scroll", function() {
         needsRotationUpdate = true;
     });
@@ -93,7 +108,7 @@ $(window).ready(function() {
         type: "rotation",
         throwProps: true,
         edgeResistance: 0.5,
-//        force3D:false,
+        force3D:false,
         bounds: {
             minRotation: 0,
             maxRotation: maxRotation
@@ -112,9 +127,9 @@ $(window).ready(function() {
 
     Draggable.create(content, {
         type: "scrollTop",
-        edgeResistance: 0.5,
+        edgeResistance: 0.78,
         throwProps: true,
-//        force3D:false,
+        force3D:false,
         onDragStart: killTweens,
         snap: function(endValue) {
             var step = maxScroll / (sections - 1);
