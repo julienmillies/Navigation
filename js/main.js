@@ -10,7 +10,6 @@ $(window).ready(function() {
             needsRotationUpdate = false,
             sections = 15,
             maxRotation = 360 - (360 / sections);
-//        maxRotation         = 360;
 
     // Functions
     Math.degrees = function(radians) {
@@ -82,7 +81,7 @@ $(window).ready(function() {
 
         if (delta < 0) {
             // scroll down
-            TweenLite.to(content, 1, {scrollTo:{y:1116}, ease:Power2.easeOut});
+            TweenLite.to(content, 1, {scrollTo:{y:content.offsetHeight}, ease:Power2.easeOut});
             console.log("scroll down");
 
         } else {
