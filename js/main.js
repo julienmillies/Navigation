@@ -10,14 +10,13 @@ $(window).ready(function() {
             needsRotationUpdate = false,
             sections = 15,
             maxRotation = 360 - (360 / sections);
-<<<<<<< HEAD
-=======
+
 
     // Functions
     Math.degrees = function(radians) {
         return radians * 180 / Math.PI;
     };
->>>>>>> FETCH_HEAD
+
 
     function blockCanvas() {
         document.body.addEventListener('touchmove', function(event) {
@@ -86,14 +85,14 @@ $(window).ready(function() {
          var delta = (evt.originalEvent && evt.originalEvent.detail < 0) || evt.wheelDelta > 0 ? 1 : -1;
         if (delta < 0) {
             // scroll down
-<<<<<<< HEAD
+
             var scrollto = Math.ceil(content.scrollTop/content.offsetHeight)*content.offsetHeight;
             TweenLite.to(content, 1, {scrollTo:{y:scrollto}, ease:Power2.easeOut});
-=======
+
             TweenLite.to(content, 1, {scrollTo:{y:content.offsetHeight}, ease:Power2.easeOut});
             console.log("scroll down");
 
->>>>>>> FETCH_HEAD
+
         } else {
             // scroll up
             var scrollto = Math.ceil(content.scrollTop/content.offsetHeight)*content.offsetHeight - content.offsetHeight;
