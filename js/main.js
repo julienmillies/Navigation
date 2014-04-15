@@ -10,12 +10,6 @@ $(window).ready(function() {
             needsRotationUpdate = false,
             sections = 15,
             maxRotation = 360 - (360 / sections);
-//        maxRotation         = 360;
-
-    // Functions
-    Math.degrees = function(radians) {
-        return radians * 180 / Math.PI;
-    };
 
     function blockCanvas() {
         document.body.addEventListener('touchmove', function(event) {
@@ -72,24 +66,27 @@ $(window).ready(function() {
 
     function displayContent() {
         setTimeout(function() {
-//            $('.visuel').css({'background': 'black'});
+            $('.visuel').css({'background': 'red'});
         }, 1000);
     }
-
+    
+    /* --------------------- */
+    /* Mouse Wheel Listeners */ 
+    /* --------------------- */
     content.addEventListener("mousewheel", function(evt){
         killTweens();
          var delta = (evt.originalEvent && evt.originalEvent.detail < 0) || evt.wheelDelta > 0 ? 1 : -1;
-
         if (delta < 0) {
             // scroll down
-            TweenLite.to(content, 1, {scrollTo:{y:1116}, ease:Power2.easeOut});
-            console.log("scroll down");
-
+            var scrollto = Math.ceil(content.scrollTop/content.offsetHeight)*content.offsetHeight;
+            TweenLite.to(content, 1, {scrollTo:{y:scrollto}, ease:Power2.easeOut});
         } else {
             // scroll up
-            console.log("scroll up");
+            var scrollto = Math.ceil(content.scrollTop/content.offsetHeight)*content.offsetHeight - content.offsetHeight;
+            TweenLite.to(content, 1, {scrollTo:{y:scrollto}, ease:Power2.easeOut});
         }
     });
+    
     content.addEventListener("DOMMouseScroll", function(){
         killTweens();
     });
